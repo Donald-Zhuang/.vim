@@ -34,52 +34,47 @@ endif
 filetype plugin indent on
 
 
-" Uncomment the next line to make Vim more Vi-compatible
-" NOTE: debian.vim sets 'nocompatible'.  Setting 'compatible' changes numerous
-" options, so any other options should be set AFTER setting 'compatible'.
-"set compatible
-
-" Uncomment the following to have Vim jump to the last position when
-" reopening a file
-"if has("autocmd")
-"  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-"endif
-
-" The following are commented out as they cause vim to behave a lot
-" differently from regular Vi. They are highly recommended though.
-"set showcmd		" Show (partial) command in status line.
-
-"set ignorecase		" Do case insensitive matching
-"set smartcase		" Do smart case matching
-"set incsearch		" Incremental search
-"set autowrite		" Automatically save before commands like :next and :make
-"set hidden             " Hide buffers when they are abandoned
-
-set mouse=a		" Enable mouse usage (all modes)
-set mousehide
-set cursorline
-set showmode
-set backspace=indent,eol,start
-set linespace=0
-set number
-set showmatch		" Show matching brackets.
-set incsearch
-set hlsearch
-
 scriptencoding utf-8
 syntax on
 syntax enable
 set background=dark
+set mouse=a                 " Automatically enable mouse usage
+set mousehide               " Hide the mouse cursor while typing
+set cursorline                  " Highlight current line
+set showmode                    " Display the current mode
+set backspace=indent,eol,start  " Backspace for dummies
+set linespace=0                 " No extra spaces between rows
+set number                      " Line numbers on
+set showmatch                   " Show matching brackets/parenthesis
+set incsearch                   " Find as you type search
+set hlsearch                    " Highlight search terms
+set winminheight=0              " Windows can be 0 line high
+set ignorecase                  " Case insensitive search
+set smartcase                   " Case sensitive when uc present
+set wildmenu                    " Show list instead of just completing
+set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
+set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap too
+set scrolljump=5                " Lines to scroll when cursor leaves screen
+set scrolloff=3                 " Minimum lines to keep above and below cursor
 
-set expandtab tabstop=4 shiftwidth=4
-retab
-set softtabstop=4
-set autoindent cindent
-set number
+set autoindent                  " Indent at the same level of the previous line
+set smartindent
+set cindent
+set shiftwidth=4                " Use indents of 4 spaces
+set expandtab                   " Tabs are spaces, not tabs
+set tabstop=4                   " An indentation every four columns
+set softtabstop=4               " Let backspace delete indent
+set showcmd                     " show the cmd you input
+set ruler                       " show the current position
+
+set laststatus=2
+set foldmethod=marker
+set updatetime=1000
+
 " Source a global configuration file if available
-if filereadable("/etc/vim/vimrc.local")
-  source /etc/vim/vimrc.local
-endif
+"if filereadable("/etc/vim/vimrc.local")
+"  source /etc/vim/vimrc.local
+"endif
 
 au VimEnter * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
 au VimLeave * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
@@ -114,6 +109,69 @@ func SetTitle()
 endfunc
 autocmd BufNewFile * normal G
 
+" 映射全选+复制 ctrl+a
+map <C-A> ggVGY
+map! <C-A> <Esc>ggVGY
+map <F12> gg=G
+" 选中状态下 Ctrl+c 复制
+vmap <C-c> "+y
+"去空行  
+nnoremap <F2> :g/^\s*$/d<CR> 
+
 let mapleader = ' '
+nnoremap <silent> <leader><leader>/ :nohlsearch<CR>
 
+" mark.vim
+nnoremap <leader>c :MarkClear<cr>
 
+" tagbar
+nnoremap <silent> <leader>t :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
+set updatetime=1000
+
+" NERDTree
+nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
+nnoremap <silent> <leader>nf :NERDTreeFind<CR>
+
+let OmniCpp_NamespaceSearch = 2 "search namespaces in the current buffer and in include files
+
+" tag
+set tags=tags;
+nmap <leader>j :tn<cr>
+nmap <leader>k :tp<cr>
+"nmap <leader>ts :ts<cr>
+
+" ctrlp
+let g:ctrlp_map = '<leader>p'
+let g:ctrlp_by_filename = 1
+let g:ctrlp_working_path_mode = 'rw'
+let g:ctrlp_root_markers = ["tags", "cscope.out"]
+let g:ctrlp_clear_cache_on_exit = 0
+set wildignore=*.o,*.obj,*.d,*/.git/*,*.a,*.so
+nnoremap <leader>b :CtrlPBuffer<cr>
+nnoremap <leader>u :CtrlPMRUFiles<cr>
+
+" ycm
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youCompleteMe/.ycm_extra_conf.py'
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>jg :YcmCompleter GoTo<CR>
+
+" cscope
+set cspc=3
+let g:cscope_auto_update = 1
+"set csprg=/usr/local/bin/cscope
+set csto=0
+set nocst
+let g:cscope_silent = 1
+let g:cscope_interested_files = '\.c$\|\.cpp$\|\.h$\|\.java$'
+nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
+nnoremap <leader>l :call ToggleLocationList()<CR>
+nnoremap <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
+nnoremap <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
+nnoremap <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
+nnoremap <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
+nnoremap <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
+nnoremap <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
+nnoremap <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
+nnoremap <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
