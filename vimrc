@@ -76,6 +76,7 @@ set updatetime=1000
 "  source /etc/vim/vimrc.local
 "endif
 
+"映射caplock为Esc
 au VimEnter * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
 au VimLeave * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 
@@ -110,9 +111,9 @@ endfunc
 autocmd BufNewFile * normal G
 
 " 映射全选+复制 ctrl+a
-map <C-A> ggVGY
+map  <C-A> ggVGY
 map! <C-A> <Esc>ggVGY
-map <F12> gg=G
+map  <F12> gg=G
 " 选中状态下 Ctrl+c 复制
 vmap <C-c> "+y
 "去空行  
