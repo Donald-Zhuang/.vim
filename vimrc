@@ -16,20 +16,19 @@ syntax on
 set nocompatible
 
 if isdirectory( expand("~/.vim/bundle/Vundle.vim") )
-	set rtp+=~/.vim/bundle/Vundle.vim
-
-	call vundle#begin()
-		"let vundle manage Vundle self, require
-		Plugin 'VundleVim/Vundle.vim'
-		Plugin 'majutsushi/tagbar'
-		Plugin 'scrooloose/nerdtree'
-		Plugin 'kien/ctrlp.vim'
-		Plugin 'brookhong/cscope.vim'
-		Plugin 'honza/vim-snippets'
-		Plugin 'SirVer/ultisnips'
-		Plugin 'OmniCppComplete'
-		Plugin 'mark.vim'
-	call vundle#end()
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+    "let vundle manage Vundle self, require
+        Plugin 'VundleVim/Vundle.vim'
+        Plugin 'majutsushi/tagbar'
+        Plugin 'scrooloose/nerdtree'
+        Plugin 'kien/ctrlp.vim'
+        Plugin 'brookhong/cscope.vim'
+        Plugin 'honza/vim-snippets'
+        "Plugin 'SirVer/ultisnips'
+        Plugin 'OmniCppComplete'
+        Plugin 'mark.vim'
+    call vundle#end()
 endif
 filetype plugin indent on
 
@@ -76,12 +75,10 @@ set updatetime=1000
 "  source /etc/vim/vimrc.local
 "endif
 
-"映射caplock为Esc
 au VimEnter * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
 au VimLeave * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 
 autocmd BufNewFile *.cpp,*.[ch] exec ":call SetTitle()"
-
 func SetTitle()
 	call setline(1,           "/***********************************************************/" )
 	call append(line("."),    "//     File Name   : ".expand("%") )
@@ -121,6 +118,39 @@ nnoremap <F2> :g/^\s*$/d<CR>
 
 let mapleader = ' '
 nnoremap <silent> <leader><leader>/ :nohlsearch<CR>
+
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+    exec "w"
+    if &filetype == 'c'
+        exec "!g++ % -o %<"
+        exec "! ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g+ % -o %<"
+        exec "! ./%<"
+    elseif &filetype == 'java'
+        exec "!javac %"
+        exec "!java %<"
+    elseif &filetype == 'sh'
+        exec "! ./%"
+    elseif &filetype == 'py'
+        exec "!python %"
+        exec "!python %<"
+    endif
+endfunc
+
+map <F8> :call Rungdb()<CR>
+func! Rungdb()
+    exec "w"
+    exec "!g++ % -g -o %<"
+    exec "!gdb ./%<"
+endfunc
+
+:inoremap ( ()<ESC>i
+:inoremap [ []<ESC>i
+:inoremap { {<CR>}<ESC>O
+:inoremap " ""<ESC>i
+:inoremap ' ''<ESC>i
 
 " mark.vim
 nnoremap <leader>c :MarkClear<cr>
