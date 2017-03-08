@@ -19,4 +19,8 @@ else
 	git clone http://github.com/VundleVim/Vundle.vim.git $VUNDLE_GIT_FOLDER 
 fi
 
-
+if which cscope > /dev/null; then
+    echo -e "Info: Cscope had been install!\n"
+elif
+    sudo apt-get install -y cscope
+fi

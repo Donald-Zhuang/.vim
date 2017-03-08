@@ -27,7 +27,7 @@ if isdirectory( expand("~/.vim/bundle/Vundle.vim") )
         Plugin 'honza/vim-snippets'
         "Plugin 'SirVer/ultisnips'
         Plugin 'OmniCppComplete'
-        Plugin 'mark.vim'
+        "Plugin 'mark.vim'
     call vundle#end()
 endif
 filetype plugin indent on
