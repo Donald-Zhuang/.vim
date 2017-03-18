@@ -15,21 +15,22 @@ syntax on
 
 set nocompatible
 
-if isdirectory( expand("~/.vim/bundle/Vundle.vim") )
-    set rtp+=~/.vim/bundle/Vundle.vim
-    call vundle#begin()
-    "let vundle manage Vundle self, require
-        Plugin 'VundleVim/Vundle.vim'
-        Plugin 'majutsushi/tagbar'
-        Plugin 'scrooloose/nerdtree'
-        Plugin 'kien/ctrlp.vim'
-        Plugin 'brookhong/cscope.vim'
-        Plugin 'honza/vim-snippets'
-        "Plugin 'SirVer/ultisnips'
-        Plugin 'OmniCppComplete'
-        "Plugin 'mark.vim'
-    call vundle#end()
-endif
+"if isdirectory( expand("~/.vim/bundle/Vundle.vim") )
+set rtp+=~/.vim/bundle/Vundle.vim
+
+call vundle#begin()
+"let vundle manage Vundle self, require
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'majutsushi/tagbar'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'kien/ctrlp.vim'
+    Plugin 'brookhong/cscope.vim'
+    Plugin 'honza/vim-snippets'
+    "Plugin 'SirVer/ultisnips'
+    Plugin 'OmniCppComplete'
+    "Plugin 'mark.vim'
+call vundle#end()
+"endif
 filetype plugin indent on
 
 
@@ -78,7 +79,7 @@ set updatetime=1000
 au VimEnter * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
 au VimLeave * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 
-autocmd BufNewFile *.cpp,*.[ch] exec ":call SetTitle()"
+autocmd BufNewFile *.cpp,*.h,*.c,*.sh exec ":call SetTitle()"
 func SetTitle()
 	call setline(1,           "/***********************************************************/" )
 	call append(line("."),    "//     File Name   : ".expand("%") )
@@ -97,13 +98,20 @@ func SetTitle()
 		call append(line(".")+11, "    return 0;")
 		call append(line(".")+12, "}")
 	elseif &filetype == 'sh'
-		call append(line(".")+6, "\#!/bin/bash"))
+		call append(line(".")+6, "\#!/bin/bash")
 	elseif &filetype == 'cpp'
-		call append(line(".")+6, "#include <iostream>")
-		call append(line(".")+7, "")
-		call append(line(".")+8, "using namespace std;")
-		call append(line(".")+9, "")
-	endif
+        if expand('%:e:t') == "h"
+            call append(line(".")+6, "#ifndef __".toupper(expand("%:r"))."_H__" ) 
+            call append(line(".")+7, "#define __".toupper(expand("%:r"))."_H__" ) 
+            call append(line(".")+8, "") 
+            call append(line(".")+9, "#endif")
+        else
+            call append(line(".")+6, "#include <iostream>")
+            call append(line(".")+7, "")
+            call append(line(".")+8, "using namespace std;")
+            call append(line(".")+9, "")
+	    endif
+    endif
 endfunc
 autocmd BufNewFile * normal G
 
@@ -191,11 +199,22 @@ nnoremap <leader>jg :YcmCompleter GoTo<CR>
 " cscope
 set cspc=3
 let g:cscope_auto_update = 1
-"set csprg=/usr/local/bin/cscope
 set csto=0
 set nocst
 let g:cscope_silent = 1
 let g:cscope_interested_files = '\.c$\|\.cpp$\|\.h$\|\.java$'
+if has("cscope")
+    set csprg=/usr/local/bin/cscope
+    set csto=0
+    set cst
+    set nocsverb
+    if filereadable("cscope.out")
+        cs add cscope.out
+    elseif $CSCOPE_DB != ""
+        cs add $CSCOPE_DB
+    endif
+    set csverb
+endif
 nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
 nnoremap <leader>l :call ToggleLocationList()<CR>
 nnoremap <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
