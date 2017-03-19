@@ -5,7 +5,8 @@
 # Created Time: Sun 05 Mar 2017 09:34:59 AM CST
 #########################################################################
 #!/bin/bash
-if [ -f "../.vimrc" ]; then
-	mv ../.vimrc ../.vimrc_bk
+LOCAL_PATH=$(pwd)
+if [ -f "~/.vimrc" ]; then
+	mv ~/.vimrc ~/.vimrc_bk
 fi
-cp ./vimrc ../.vimrc
+cp $LOCAL_PATH/vimrc ~/.vimrc

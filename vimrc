@@ -159,7 +159,7 @@ endfunc
 :inoremap { {<CR>}<ESC>O
 :inoremap " ""<ESC>i
 :inoremap ' ''<ESC>i
-
+:inoremap < <><ESC>i
 " mark.vim
 nnoremap <leader>c :MarkClear<cr>
 
