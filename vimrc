@@ -76,18 +76,29 @@ set updatetime=1000
 "  source /etc/vim/vimrc.local
 "endif
 
-au VimEnter * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
-au VimLeave * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
+"Disable mapping of caps lock
+"au VimEnter * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+"au VimLeave * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 
 autocmd BufNewFile *.cpp,*.h,*.c,*.sh exec ":call SetTitle()"
 func SetTitle()
-	call setline(1,           "/***********************************************************/" )
-	call append(line("."),    "//     File Name   : ".expand("%") )
-	call append(line(".") + 1,"//     Author      : Donald Zhuang")
-	call append(line(".") + 2,"//     E-Mail      : ")
-	call append(line(".") + 3,"//     Create Time : ".strftime("%c")) 
-	call append(line(".") + 4,"/**********************************************************/" )
-	call append(line(".") + 5,"")    
+    if &filetype == 'sh'
+        call setline(1,           "#/***********************************************************/" )
+    	call append(line("."),    "#//     File Name   : ".expand("%") )
+    	call append(line(".") + 1,"#//     Author      : Donald Zhuang")
+    	call append(line(".") + 2,"#//     E-Mail      : ")
+    	call append(line(".") + 3,"#//     Create Time : ".strftime("%c")) 
+    	call append(line(".") + 4,"#/**********************************************************/" )
+    	call append(line(".") + 5,"")    
+    else
+        call setline(1,           "/***********************************************************/" )
+    	call append(line("."),    "//     File Name   : ".expand("%") )
+    	call append(line(".") + 1,"//     Author      : Donald Zhuang")
+    	call append(line(".") + 2,"//     E-Mail      : ")
+    	call append(line(".") + 3,"//     Create Time : ".strftime("%c")) 
+    	call append(line(".") + 4,"/**********************************************************/" )
+    	call append(line(".") + 5,"")    
+    endif
 
 	if &filetype == 'c'
 		call append(line(".")+6, "#include <stdio.h>")
