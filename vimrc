@@ -80,7 +80,7 @@ set updatetime=1000
 "au VimEnter * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
 "au VimLeave * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 
-autocmd BufNewFile *.cpp,*.h,*.c,*.sh exec ":call SetTitle()"
+autocmd BufNewFile *.cpp,*.h,*.c,*.sh,*.py exec ":call SetTitle()"
 func SetTitle()
     if &filetype == 'sh'
         call setline(1,           "#/***********************************************************/" )
@@ -90,7 +90,7 @@ func SetTitle()
     	call append(line(".") + 3,"#//     Create Time : ".strftime("%c")) 
     	call append(line(".") + 4,"#/**********************************************************/" )
     	call append(line(".") + 5,"")    
-    else
+    elseif &filetype != 'python'
         call setline(1,           "/***********************************************************/" )
     	call append(line("."),    "//     File Name   : ".expand("%") )
     	call append(line(".") + 1,"//     Author      : Donald Zhuang")
@@ -110,6 +110,13 @@ func SetTitle()
 		call append(line(".")+12, "}")
 	elseif &filetype == 'sh'
 		call append(line(".")+6, "\#!/bin/bash")
+    elseif &filetype == 'python'
+        call setline(1,             "#!/usr/local/bin/python3")
+        call append(line(".") ,     "#-*- coding: utf-8 -*-")
+        call append(line(".") + 1,  "__author__ = 'donald.zhuang'")
+        call append(line(".") + 2,  "")
+        call append(line(".") + 3,  "if __name__ == '__main__':")
+        call append(line(".") + 4,  "")
 	elseif &filetype == 'cpp'
         if expand('%:e:t') == "h"
             call append(line(".")+6, "#ifndef __".toupper(expand("%:r"))."_H__" ) 
